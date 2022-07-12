@@ -14,11 +14,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -87,5 +88,32 @@ public class CustomerServiceTest {
         assertThat(createdCustomerDTO.getId(), is(equalTo(customerDTO.getId())));
         assertThat(createdCustomerDTO.getName(), is(equalTo(customerDTO.getName())));
         verify(customerRepository, times(0)).findById(customerDTO.getId());
+    }
+
+    @Test
+    void whenListCustomerIsCalledThenReturnAListOfCustomer() {
+        // given
+        CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
+        Customer customer = customerMapper.toModel(customerDTO);
+
+        // when
+        when(customerRepository.findAll()).thenReturn(Collections.singletonList(customer));
+
+        // then
+        List<CustomerDTO> foundListCustomersDTO = customerService.listAll();
+
+        assertThat(foundListCustomersDTO.get(0), is(equalTo(customerDTO)));
+        assertThat(foundListCustomersDTO, is(not(empty())));
+    }
+
+    @Test
+    void whenListCustomerIsCalledThenReturnAnEmptyList() {
+        // when
+        when(customerRepository.findAll()).thenReturn(Collections.emptyList());
+
+        // then
+        List<CustomerDTO> foundListCustomersDTO = customerService.listAll();
+
+        assertThat(foundListCustomersDTO, is(empty()));
     }
 }

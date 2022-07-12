@@ -8,7 +8,10 @@ import dio.serviceorder.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -24,6 +27,13 @@ public class CustomerService {
             return customerMapper.toDTO(savedCustomer);
         }
         throw new CustomerAlreadyCreated(customer.getId());
+    }
+
+    public List<CustomerDTO> listAll(){
+        return customerRepository.findAll()
+                .stream()
+                .map(customerMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     private boolean checkIfCustomerIdAlreadyBeUsed(Customer customer){
