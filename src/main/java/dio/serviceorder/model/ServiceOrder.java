@@ -19,7 +19,6 @@ public class ServiceOrder {
     private Long id;
 
     @ManyToOne
-    @Column(nullable = false)
     private Customer customer;
 
     @Column(nullable = false)
