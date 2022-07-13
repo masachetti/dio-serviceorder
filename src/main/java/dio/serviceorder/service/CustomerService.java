@@ -47,9 +47,16 @@ public class CustomerService {
         customerRepository.deleteById(id);
     }
 
+    public CustomerDTO update(CustomerDTO customerDTO) throws CustomerNotFoundException {
+        if (!checkIfIdExists(customerDTO.getId()))
+            throw new CustomerNotFoundException(customerDTO.getId());
+        Customer customer = customerMapper.toModel(customerDTO);
+        Customer savedCustomer = customerRepository.save(customer);
+        return customerMapper.toDTO(savedCustomer);
+    }
+
     private boolean checkIfIdExists(Long id){
         Optional<Customer> customerOptional = customerRepository.findById(id);
         return customerOptional.isPresent();
     }
-
 }

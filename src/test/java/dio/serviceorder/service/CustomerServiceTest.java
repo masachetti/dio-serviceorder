@@ -167,4 +167,37 @@ public class CustomerServiceTest {
         // then
         assertThrows(CustomerNotFoundException.class, () -> customerService.deleteById(customerDTO.getId()));
     }
+
+    @Test
+    void whenUpdateIsCalledWithAValidCustomerThenTheCustomerShouldBeUpdated() throws CustomerNotFoundException {
+        // given
+        CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
+        CustomerDTO customerToUpdateDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
+        customerToUpdateDTO.setName("Maria");
+        Customer createdCustomer = customerMapper.toModel(customerDTO);
+        Customer updatedCustomer = customerMapper.toModel(customerToUpdateDTO);
+
+        // when
+        when(customerRepository.findById(customerDTO.getId())).thenReturn(Optional.of(createdCustomer));
+        when(customerRepository.save(updatedCustomer)).thenReturn(updatedCustomer);
+
+        // then
+        CustomerDTO updatedCustomerDTO = customerService.update(customerToUpdateDTO);
+
+        assertThat(updatedCustomerDTO, equalTo(customerToUpdateDTO));
+    }
+
+    @Test
+    void whenUpdateIsCalledWithAnInvalidCustomerIdThenAnExceptionShouldBeThrown() {
+        // given
+        CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
+        Customer customer = customerMapper.toModel(customerDTO);
+
+        // when
+        when(customerRepository.findById(customerDTO.getId())).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(CustomerNotFoundException.class, () -> customerService.update(customerDTO));
+        verify(customerRepository, times(0)).save(customer);
+    }
 }
