@@ -36,8 +36,8 @@ public class CustomerServiceTest {
     Funcionalidades desejadas:
         - Adicionar novo cliente - Ok
         - Buscar todos os clientes - OK
-        - Deletar cliente
         - Buscar um cliente especifico - Ok
+        - Deletar cliente - Ok
         - Alterar nome do cliente
     */
 
@@ -140,6 +140,31 @@ public class CustomerServiceTest {
         assertThrows(CustomerNotFoundException.class, ()-> customerService.findById(1L));
     }
 
-    
+    @Test
+    void whenDeleteIsCalledWithAValidCustomerIdThenACustomerShouldBeDeleted() throws CustomerNotFoundException {
+        // given
+        CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
+        Customer customer = customerMapper.toModel(customerDTO);
 
+        // when
+        when(customerRepository.findById(customerDTO.getId())).thenReturn(Optional.of(customer));
+        doNothing().when(customerRepository).deleteById(customerDTO.getId());
+
+        // then
+        customerService.deleteById(customerDTO.getId());
+
+        verify(customerRepository, times(1)).deleteById(customerDTO.getId());
+    }
+
+    @Test
+    void whenDeleteIsCalledWithAnInvalidCustomerIdThenAnExceptionShouldBeThrown() {
+        // given
+        CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
+
+        // when
+        when(customerRepository.findById(customerDTO.getId())).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(CustomerNotFoundException.class, () -> customerService.deleteById(customerDTO.getId()));
+    }
 }
