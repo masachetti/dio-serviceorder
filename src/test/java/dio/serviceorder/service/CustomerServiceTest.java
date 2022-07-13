@@ -32,15 +32,6 @@ public class CustomerServiceTest {
     @InjectMocks
     private CustomerService customerService;
 
-    /*
-    Funcionalidades desejadas:
-        - Adicionar novo cliente - Ok
-        - Buscar todos os clientes - OK
-        - Buscar um cliente especifico - Ok
-        - Deletar cliente - Ok
-        - Alterar nome do cliente
-    */
-
     @Test
     void whenCustomerInformedThenItShouldBeCreated() throws CustomerAlreadyCreatedException {
         // given
