@@ -14,7 +14,7 @@ public class ServiceOrderDTOBuilder {
     private CustomerDTO customer = CustomerDTOBuilder.builder().build().toCustomerDTO();
 
     @Builder.Default
-    private boolean closed = false;
+    private Boolean closed = false;
 
     @Builder.Default
     private ServiceType type = ServiceType.INSTALLATION;

@@ -21,7 +21,7 @@ public class ServiceOrderDTO {
     private CustomerDTO customer;
 
     @NotNull
-    private boolean closed;
+    private Boolean closed;
 
     @NotNull
     @Enumerated(EnumType.STRING)
