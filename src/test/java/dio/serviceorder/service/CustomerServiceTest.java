@@ -36,8 +36,8 @@ public class CustomerServiceTest {
     Funcionalidades desejadas:
         - Adicionar novo cliente - Ok
         - Buscar todos os clientes - OK
-        - Buscar um cliente especifico
         - Deletar cliente
+        - Buscar um cliente especifico - Ok
         - Alterar nome do cliente
     */
 
@@ -117,7 +117,7 @@ public class CustomerServiceTest {
     }
 
     @Test
-    void whenFindByIdIsCalledWithACreatedCustomerIdThenReturnTheCustomer() throws CustomerNotFoundException {
+    void whenFindByIdIsCalledWithAValidCustomerIdThenReturnTheCustomer() throws CustomerNotFoundException {
         // given
         CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
         Customer customer = customerMapper.toModel(customerDTO);
