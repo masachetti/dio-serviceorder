@@ -1,7 +1,7 @@
 package dio.serviceorder.service;
 
 import dio.serviceorder.dto.CustomerDTO;
-import dio.serviceorder.exception.CustomerAlreadyCreatedException;
+import dio.serviceorder.exception.CustomerAlreadyExistsException;
 import dio.serviceorder.exception.CustomerNotFoundException;
 import dio.serviceorder.mapper.CustomerMapper;
 import dio.serviceorder.model.Customer;
@@ -20,10 +20,10 @@ public class CustomerService {
 
     private final CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
-    public CustomerDTO createCustomer(CustomerDTO customerDTO) throws CustomerAlreadyCreatedException {
+    public CustomerDTO createCustomer(CustomerDTO customerDTO) throws CustomerAlreadyExistsException {
         Customer customer = customerMapper.toModel(customerDTO);
         if (customerDTO.getId() != null && checkIfIdExists(customer.getId()))
-            throw new CustomerAlreadyCreatedException(customer.getId());
+            throw new CustomerAlreadyExistsException(customer.getId());
         Customer savedCustomer = customerRepository.save(customer);
         return customerMapper.toDTO(savedCustomer);
     }

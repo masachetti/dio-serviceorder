@@ -2,7 +2,7 @@ package dio.serviceorder.service;
 
 import dio.serviceorder.builder.CustomerDTOBuilder;
 import dio.serviceorder.dto.CustomerDTO;
-import dio.serviceorder.exception.CustomerAlreadyCreatedException;
+import dio.serviceorder.exception.CustomerAlreadyExistsException;
 import dio.serviceorder.exception.CustomerNotFoundException;
 import dio.serviceorder.mapper.CustomerMapper;
 import dio.serviceorder.model.Customer;
@@ -33,7 +33,7 @@ public class CustomerServiceTest {
     private CustomerService customerService;
 
     @Test
-    void whenCustomerInformedThenItShouldBeCreated() throws CustomerAlreadyCreatedException {
+    void whenCustomerInformedThenItShouldBeCreated() throws CustomerAlreadyExistsException {
         // given
         CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
         Customer customer = customerMapper.toModel(customerDTO);
@@ -59,11 +59,11 @@ public class CustomerServiceTest {
         when(customerRepository.findById(customerDTO.getId())).thenReturn(Optional.of(customer));
 
         // then
-        assertThrows(CustomerAlreadyCreatedException.class, ()-> customerService.createCustomer(customerDTO));
+        assertThrows(CustomerAlreadyExistsException.class, ()-> customerService.createCustomer(customerDTO));
     }
 
     @Test
-    void whenCustomerWithoutIdIsInformedThenItShouldBeCreated() throws CustomerAlreadyCreatedException {
+    void whenCustomerWithoutIdIsInformedThenItShouldBeCreated() throws CustomerAlreadyExistsException {
         // given
         CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
         customerDTO.setId(null);
@@ -75,7 +75,6 @@ public class CustomerServiceTest {
         // then
         CustomerDTO createdCustomerDTO = customerService.createCustomer(customerDTO);
 
-        assertThat(createdCustomerDTO.getId(), is(equalTo(customerDTO.getId())));
         assertThat(createdCustomerDTO.getName(), is(equalTo(customerDTO.getName())));
         verify(customerRepository, times(0)).findById(customerDTO.getId());
     }
