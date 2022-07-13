@@ -2,16 +2,15 @@ package dio.serviceorder.service;
 
 import dio.serviceorder.builder.CustomerDTOBuilder;
 import dio.serviceorder.dto.CustomerDTO;
-import dio.serviceorder.exception.CustomerAlreadyCreated;
+import dio.serviceorder.exception.CustomerAlreadyCreatedException;
+import dio.serviceorder.exception.CustomerNotFoundException;
 import dio.serviceorder.mapper.CustomerMapper;
 import dio.serviceorder.model.Customer;
 import dio.serviceorder.repository.CustomerRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
@@ -35,15 +34,15 @@ public class CustomerServiceTest {
 
     /*
     Funcionalidades desejadas:
-        - Adicionar novo cliente
-        - Buscar todos os clientes
+        - Adicionar novo cliente - Ok
+        - Buscar todos os clientes - OK
         - Buscar um cliente especifico
         - Deletar cliente
         - Alterar nome do cliente
     */
 
     @Test
-    void whenCustomerInformedThenItShouldBeCreated() throws CustomerAlreadyCreated {
+    void whenCustomerInformedThenItShouldBeCreated() throws CustomerAlreadyCreatedException {
         // given
         CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
         Customer customer = customerMapper.toModel(customerDTO);
@@ -69,11 +68,11 @@ public class CustomerServiceTest {
         when(customerRepository.findById(customerDTO.getId())).thenReturn(Optional.of(customer));
 
         // then
-        assertThrows(CustomerAlreadyCreated.class, ()-> customerService.createCustomer(customerDTO));
+        assertThrows(CustomerAlreadyCreatedException.class, ()-> customerService.createCustomer(customerDTO));
     }
 
     @Test
-    void whenCustomerWithoutIdIsInformedThenItShouldBeCreated() throws CustomerAlreadyCreated {
+    void whenCustomerWithoutIdIsInformedThenItShouldBeCreated() throws CustomerAlreadyCreatedException {
         // given
         CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
         customerDTO.setId(null);
@@ -116,4 +115,31 @@ public class CustomerServiceTest {
 
         assertThat(foundListCustomersDTO, is(empty()));
     }
+
+    @Test
+    void whenFindByIdIsCalledWithACreatedCustomerIdThenReturnTheCustomer() throws CustomerNotFoundException {
+        // given
+        CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
+        Customer customer = customerMapper.toModel(customerDTO);
+
+        // when
+        when(customerRepository.findById(customerDTO.getId())).thenReturn(Optional.of(customer));
+
+        // then
+        CustomerDTO foundCustomerDTO = customerService.findById(customerDTO.getId());
+
+        assertThat(foundCustomerDTO.getId(), is(equalTo(customerDTO.getId())));
+    }
+
+    @Test
+    void whenFindByIdIsCalledWithANonexistentCustomerIdThenAnExceptionShouldBeThrown() {
+        // when
+        when(customerRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(CustomerNotFoundException.class, ()-> customerService.findById(1L));
+    }
+
+    
+
 }
