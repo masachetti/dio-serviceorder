@@ -5,7 +5,6 @@ import dio.serviceorder.builder.CustomerDTOBuilder;
 import dio.serviceorder.dto.CustomerDTO;
 import dio.serviceorder.exception.CustomerAlreadyExistsException;
 import dio.serviceorder.exception.CustomerNotFoundException;
-import dio.serviceorder.model.Customer;
 import dio.serviceorder.service.CustomerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,10 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CustomerControllerTest {
 
     private static final String API_URL_PATH = "/api/v1/customers";
-    private static final long VALID_CUSTOMER_ID = 1L;
-    private static final long INVALID_CUSTOMER_ID = 2L;
-//    private static final String CUSTOMER_API_SUBPATH_INCREMENT_URL = "/increment";
-//    private static final String CUSTOMER_API_SUBPATH_DECREMENT_URL = "/decrement";
 
     private MockMvc mockMvc;
 
