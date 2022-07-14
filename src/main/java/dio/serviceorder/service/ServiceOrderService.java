@@ -1,9 +1,11 @@
 package dio.serviceorder.service;
 
+import dio.serviceorder.dto.CustomerDTO;
 import dio.serviceorder.dto.ServiceOrderDTO;
 import dio.serviceorder.enums.ServiceType;
 import dio.serviceorder.exception.ServiceOrderAlreadyExistsException;
 import dio.serviceorder.exception.ServiceOrderNotFoundException;
+import dio.serviceorder.mapper.CustomerMapper;
 import dio.serviceorder.mapper.ServiceOrderMapper;
 import dio.serviceorder.model.Customer;
 import dio.serviceorder.model.ServiceOrder;
@@ -21,6 +23,7 @@ public class ServiceOrderService {
     ServiceOrderRepository serviceOrderRepository;
 
     ServiceOrderMapper serviceOrderMapper = ServiceOrderMapper.INSTANCE;
+    CustomerMapper customerMapper = CustomerMapper.INSTANCE;
 
     public ServiceOrderDTO create(ServiceOrderDTO serviceOrderDTO) throws ServiceOrderAlreadyExistsException {
         ServiceOrder serviceOrder = serviceOrderMapper.toModel(serviceOrderDTO);
@@ -64,7 +67,8 @@ public class ServiceOrderService {
                 .collect(Collectors.toList());
     }
 
-    public List<ServiceOrderDTO> listAllOfCustomer(Customer customer){
+    public List<ServiceOrderDTO> listAllOfCustomer(CustomerDTO customerDTO){
+        Customer customer = customerMapper.toModel(customerDTO);
         return serviceOrderRepository.findByCustomer(customer)
                 .stream()
                 .map(serviceOrderMapper::toDTO)

@@ -2,6 +2,7 @@ package dio.serviceorder.service;
 
 import dio.serviceorder.builder.CustomerDTOBuilder;
 import dio.serviceorder.builder.ServiceOrderDTOBuilder;
+import dio.serviceorder.dto.CustomerDTO;
 import dio.serviceorder.dto.ServiceOrderDTO;
 import dio.serviceorder.enums.ServiceType;
 import dio.serviceorder.exception.ServiceOrderAlreadyExistsException;
@@ -192,7 +193,7 @@ public class ServiceOrderServiceTest {
                 .thenReturn(Collections.singletonList(serviceOrder));
 
         // then
-        List<ServiceOrderDTO> foundListOfServiceOrdersDTO = serviceOrderService.listAllOfCustomer(serviceOrder.getCustomer());
+        List<ServiceOrderDTO> foundListOfServiceOrdersDTO = serviceOrderService.listAllOfCustomer(serviceOrderDTO.getCustomer());
 
         assertThat(foundListOfServiceOrdersDTO.get(0), is(equalTo(serviceOrderDTO)));
         assertThat(foundListOfServiceOrdersDTO, is(not(empty())));
@@ -201,14 +202,13 @@ public class ServiceOrderServiceTest {
     @Test
     void whenListByCustomerIsCalledThenAEmptyListShouldBeReturned() {
         // given
-        Customer testCustomer = CustomerMapper.INSTANCE.toModel(
-                CustomerDTOBuilder.builder().build().toCustomerDTO()
-        );
+        CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
+        Customer customer = CustomerMapper.INSTANCE.toModel(customerDTO);
         // when
-        when(serviceOrderRepository.findByCustomer(testCustomer)).thenReturn(Collections.emptyList());
+        when(serviceOrderRepository.findByCustomer(customer)).thenReturn(Collections.emptyList());
 
         // then
-        List<ServiceOrderDTO> foundListOfServiceOrdersDTO = serviceOrderService.listAllOfCustomer(testCustomer);
+        List<ServiceOrderDTO> foundListOfServiceOrdersDTO = serviceOrderService.listAllOfCustomer(customerDTO);
 
         assertThat(foundListOfServiceOrdersDTO, is(empty()));
     }
