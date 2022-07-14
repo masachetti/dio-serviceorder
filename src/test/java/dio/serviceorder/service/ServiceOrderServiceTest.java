@@ -220,7 +220,7 @@ public class ServiceOrderServiceTest {
         ServiceOrder serviceOrder = serviceOrderMapper.toModel(serviceOrderDTO);
 
         // when
-        when(serviceOrderRepository.findByServiceType(serviceOrder.getType()))
+        when(serviceOrderRepository.findByType(serviceOrder.getType()))
                 .thenReturn(Collections.singletonList(serviceOrder));
 
         // then
@@ -236,7 +236,7 @@ public class ServiceOrderServiceTest {
         ServiceType testType = ServiceType.INSTALLATION;
 
         // when
-        when(serviceOrderRepository.findByServiceType(testType)).thenReturn(Collections.emptyList());
+        when(serviceOrderRepository.findByType(testType)).thenReturn(Collections.emptyList());
 
         // then
         List<ServiceOrderDTO> foundListOfServiceOrdersDTO = serviceOrderService.listAllWithServiceType(testType);

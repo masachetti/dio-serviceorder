@@ -11,5 +11,5 @@ public interface ServiceOrderRepository extends JpaRepository<ServiceOrder, Long
 
     List<ServiceOrder> findByClosed(Boolean closed);
     List<ServiceOrder> findByCustomer(Customer customer);
-    List<ServiceOrder> findByServiceType(ServiceType type);
+    List<ServiceOrder> findByType(ServiceType type);
 }

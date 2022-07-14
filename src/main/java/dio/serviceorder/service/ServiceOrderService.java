@@ -72,7 +72,7 @@ public class ServiceOrderService {
     }
 
     public List<ServiceOrderDTO> listAllWithServiceType(ServiceType type){
-        return serviceOrderRepository.findByServiceType(type)
+        return serviceOrderRepository.findByType(type)
                 .stream()
                 .map(serviceOrderMapper::toDTO)
                 .collect(Collectors.toList());
