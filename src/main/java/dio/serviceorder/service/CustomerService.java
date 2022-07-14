@@ -22,7 +22,7 @@ public class CustomerService {
 
     public CustomerDTO createCustomer(CustomerDTO customerDTO) throws CustomerAlreadyExistsException {
         Customer customer = customerMapper.toModel(customerDTO);
-        if (customerDTO.getId() != null && checkIfIdExists(customer.getId()))
+        if (customerDTO.getId() != null && checkIfCustomerExists(customer.getId()))
             throw new CustomerAlreadyExistsException(customer.getId());
         Customer savedCustomer = customerRepository.save(customer);
         return customerMapper.toDTO(savedCustomer);
@@ -42,20 +42,20 @@ public class CustomerService {
     }
 
     public void deleteById(Long id) throws CustomerNotFoundException {
-        if (!checkIfIdExists(id))
+        if (!checkIfCustomerExists(id))
             throw new CustomerNotFoundException(id);
         customerRepository.deleteById(id);
     }
 
     public CustomerDTO update(CustomerDTO customerDTO) throws CustomerNotFoundException {
-        if (!checkIfIdExists(customerDTO.getId()))
+        if (!checkIfCustomerExists(customerDTO.getId()))
             throw new CustomerNotFoundException(customerDTO.getId());
         Customer customer = customerMapper.toModel(customerDTO);
         Customer savedCustomer = customerRepository.save(customer);
         return customerMapper.toDTO(savedCustomer);
     }
 
-    private boolean checkIfIdExists(Long id){
+    public boolean checkIfCustomerExists(Long id){
         Optional<Customer> customerOptional = customerRepository.findById(id);
         return customerOptional.isPresent();
     }
