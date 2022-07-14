@@ -22,7 +22,7 @@ public class ServiceOrder {
     private Customer customer;
 
     @Column(nullable = false)
-    private boolean closed;
+    private Boolean closed;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
