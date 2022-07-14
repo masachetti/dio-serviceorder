@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class ServiceOrder {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
