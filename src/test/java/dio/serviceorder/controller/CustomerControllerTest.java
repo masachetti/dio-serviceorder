@@ -139,9 +139,6 @@ public class CustomerControllerTest {
 
     @Test
     void whenGETListWithoutCustomerIsCalledThenOkStatusIsReturned() throws Exception {
-        // given
-        CustomerDTO customerDTO = CustomerDTOBuilder.builder().build().toCustomerDTO();
-
         // when
         when(customerService.listAll()).thenReturn(Collections.emptyList());
 
